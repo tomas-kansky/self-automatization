@@ -1,4 +1,4 @@
-﻿# Self Automation (Google Apps Script)
+# Self Automation (Google Apps Script)
 
 Automatizační skripty běžící na platformě Google Apps Script (GAS) vyvíjené lokálně pomocí nástroje Google Clasp.
 
@@ -7,7 +7,9 @@ Automatizační skripty běžící na platformě Google Apps Script (GAS) vyvíj
 Kompletní popis architektury, filtrů a budoucího rozvoje naleznete v [USE_CASES.md](./USE_CASES.md).
 
 - **Use Case 1 (RegioJet):** Automatické stahování a ukládání jízdenek/faktur z Gmailu na Google Disk podle měsíců.
-- **Use Case 2 (Faktury podle DIČ s OCR):** Autonomní skenování přijatých PDF faktur pomocí nativního Google OCR a párování na DIČ.
+- **Use Case 2 (Přijaté faktury podle DIČ s OCR):** Autonomní skenování přijatých PDF faktur pomocí nativního Google OCR a párování na DIČ.
+- **Use Case 3 (Vydané faktury Česká spořitelna):** Sledování odeslaných faktur klientovi, detekce data zdanitelného plnění (DUZP) přes OCR a ukládání ve formátu `ČS_MM_YYYY.pdf`.
+- **Master Orchestrator (`AutomationRunner`):** Centrální třída spouštějící všechny procesy v izolovaných blocích pod jediným časovým spouštěčem (`runAllAutomations`).
 
 ## 🛠️ Lokální vývoj s Clasp
 
@@ -38,5 +40,5 @@ Tento repozitář je připraven pro lokální editaci v jakémkoliv editoru s po
   ```
 - **Otevření projektu v prohlížeči:**
   ```bash
-  clasp open
+  clasp open-script
   ```

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Use Case 2: Obecné přijaté faktury podle DIČ s využitím nativního Google OCR.
  *
  * Autonomně prohledává e-maily s PDF přílohami, provádí OCR čtení a hledá shodu
@@ -76,45 +76,6 @@ function processVatInvoices() {
       // Vlákno mělo PDF, ale v žádném nebylo nalezeno vaše DIČ
       thread.addLabel(ignoredLabel);
       Logger.log(`[VAT Invoices] Vlákno označeno ${CONFIG.VAT_INVOICES.IGNORED_LABEL} (prevence re-processingu, zůstává v Inboxu).`);
-    }
-  }
-}
-
-/**
- * Převede binární data PDF na dočasný Google Dokument s OCR a extrahuje textový obsah.
- * Garantuje smazání vytvořeného dočasného dokumentu v bloku finally.
- *
- * @param {GoogleAppsScript.Base.Blob} pdfBlob Binární data PDF
- * @param {string} [language="cs"] Jazykový kód pro OCR
- * @returns {string} Extrahovaný text
- */
-function extractTextFromPdfOcr(pdfBlob, language) {
-  let tempDocId = null;
-  try {
-    const fileMetadata = {
-      title: "temp_ocr_" + Date.now(),
-      mimeType: "application/vnd.google-apps.document"
-    };
-
-    // Volání pokročilé služby Drive API (v2) s parametrem OCR
-    // @ts-ignore
-    const tempDoc = Drive.Files.insert(fileMetadata, pdfBlob, {
-      ocr: true,
-      ocrLanguage: language || "cs"
-    });
-
-    tempDocId = tempDoc.id;
-
-    // Načtení těla dokumentu
-    const doc = DocumentApp.openById(tempDocId);
-    return doc.getBody().getText();
-  } finally {
-    if (tempDocId) {
-      try {
-        DriveApp.getFileById(tempDocId).setTrashed(true);
-      } catch (cleanupError) {
-        Logger.log(`[VAT Invoices] Varování: Nepodařilo se smazat dočasný dokument ${tempDocId}: ${cleanupError.message}`);
-      }
     }
   }
 }
