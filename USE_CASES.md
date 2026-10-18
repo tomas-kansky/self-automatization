@@ -110,7 +110,7 @@ Automatické zpracování **odeslaných e-mailů** obsahujících vydanou faktur
 | **Spouštění** | Součást `runAllAutomations()` | Spouštěno centrálním triggerem |
 | **Příjemce e-mailu** | `CS_INVOICE_RECIPIENT_EMAIL` | Čteno ze Script Properties (např. klientská účtárna/kontaktní osoba) |
 | **Hledané DIČ** | `TARGET_VAT_ID` | Vaše DIČ uvedené na faktuře jako dodavatel |
-| **Časové okno** | `newer_than:30d` | 30 dní pro spolehlivé zachycení měsíční fakturace |
+| **Časové okno** | `newer_than:7d` | Sjednocené 7denní okno (společný parametr CONFIG.SEARCH_WINDOW) |
 | **Vyhledávací dotaz** | `to:{email} has:attachment filename:pdf -label:Invoices/Processed_CS -label:Invoices/Ignored_CS newer_than:30d` | |
 | **Štítky Gmail** | `Invoices/Processed_CS`, `Invoices/Ignored_CS` | Evidence zpracovaných odeslaných zpráv |
 | **Prefix souboru** | `ČS` | Výsledný název např. `ČS_09_2026.pdf` |

@@ -5,6 +5,14 @@
  * Pokud ještě nejsou v cloudu nastaveny, použije se bezpečný zástupný text.
  */
 const CONFIG = {
+  // =========================================================================
+  // Společné globální parametry pro všechny automatizace
+  // =========================================================================
+  
+  // Sjednocené časové okno pro vyhledávání (např. "7d", "14d", "30d")
+  // Změnou této jediné hodnoty se změní časové okno pro všechny tři procesy najednou.
+  SEARCH_WINDOW: "7d",
+
   // Kořenová složka na Google Disku pro ukládání všech faktur
   get INVOICE_ROOT_FOLDER_ID() {
     return PropertiesService.getScriptProperties().getProperty("INVOICE_ROOT_FOLDER_ID") || "YOUR_DRIVE_FOLDER_ID";
@@ -15,13 +23,17 @@ const CONFIG = {
     return PropertiesService.getScriptProperties().getProperty("TARGET_VAT_ID") || "CZ1234567890";
   },
 
+  // =========================================================================
+  // Specifické parametry pro jednotlivé moduly
+  // =========================================================================
+
   // Parametry pro Use Case 1: RegioJet jízdenky a faktury
   REGIOJET: {
     SENDER: "jizdenky@regiojet.cz",
     SUBJECT_KEYWORD: "RegioJet: Elektronická jízdenka",
     PROCESSED_LABEL: "Processed_RJ",
     ATTACHMENT_KEYWORD: "invoice",
-    SEARCH_WINDOW: "7d", // Sjednocené okno 7 dní
+    get SEARCH_WINDOW() { return CONFIG.SEARCH_WINDOW; },
     MAX_THREADS: 20
   },
 
@@ -29,7 +41,7 @@ const CONFIG = {
   VAT_INVOICES: {
     PROCESSED_LABEL: "Invoices/Processed",
     IGNORED_LABEL: "Invoices/Ignored",
-    SEARCH_WINDOW: "7d",
+    get SEARCH_WINDOW() { return CONFIG.SEARCH_WINDOW; },
     MAX_BATCH_SIZE: 10,  // Ochrana proti překročení 6minutového limitu GAS
     OCR_LANGUAGE: "cs"
   },
@@ -41,7 +53,7 @@ const CONFIG = {
     },
     PROCESSED_LABEL: "Invoices/Processed_CS",
     IGNORED_LABEL: "Invoices/Ignored_CS",
-    SEARCH_WINDOW: "30d", // 30denní okno pro spolehlivé zachycení měsíční fakturace
+    get SEARCH_WINDOW() { return CONFIG.SEARCH_WINDOW; },
     FILE_PREFIX: "ČS",
     MAX_THREADS: 10,
     OCR_LANGUAGE: "cs"
