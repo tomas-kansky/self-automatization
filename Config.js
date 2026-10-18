@@ -21,7 +21,7 @@ const CONFIG = {
     SUBJECT_KEYWORD: "RegioJet: Elektronická jízdenka",
     PROCESSED_LABEL: "Processed_RJ",
     ATTACHMENT_KEYWORD: "invoice",
-    SEARCH_WINDOW: "2d", // 2 dny pro bezpečné překlenutí přelomu půlnoci
+    SEARCH_WINDOW: "7d", // Sjednocené okno 7 dní
     MAX_THREADS: 20
   },
 

@@ -79,7 +79,7 @@ Automatické stahování, inteligentní přejmenování a ukládání daňových
 
 ### 1.4 Body k domyšlení a diskuzi (Brainstorming)
 - [ ] **Časové okno `after:YYYY/MM/DD` vs. přelom půlnoci:**
-  Pokud jízdenka dorazí ve 23:55 a trigger se spustí v 00:05, filtr `after:YYYY/MM/DD` (kde datum je už nový den) může e-mail minout. Bezpečnější by mohlo být `newer_than:2d -label:Processed_RJ`.
+  Pokud jízdenka dorazí ve 23:55 a trigger se spustí v 00:05, filtr `after:YYYY/MM/DD` (kde datum je už nový den) může e-mail minout. Bezpečnější by mohlo být `newer_than:7d -label:Processed_RJ`.
 - [ ] **Kolize názvů souborů:**
   Pokud uživatel cestuje v jeden den dvakrát (tam i zpět), obě jízdenky by dostaly stejný název `RJ_18.10.pdf`.
   *Návrh řešení:* Přidat kontrolu existence souboru nebo do názvu zahrnout kód rezervace / čas či suffix `RJ_18.10_1.pdf`.
