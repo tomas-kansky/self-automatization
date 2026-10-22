@@ -35,6 +35,7 @@ function processCsInvoices() {
     const messages = thread.getMessages();
     let savedInvoicesCount = 0;
     let totalPdfCount = 0;
+    let ocrErrorsCount = 0;
 
     for (const message of messages) {
       const attachments = message.getAttachments();
@@ -94,6 +95,7 @@ function processCsInvoices() {
             Logger.log(`[ČS Invoices] ℹ️ Vaše DIČ v souboru ${originalName} nenalezeno.`);
           }
         } catch (err) {
+          ocrErrorsCount++;
           Logger.log(`[ČS Invoices] ⚠️ Chyba při zpracování OCR: ${err.message}`);
         }
       }
@@ -103,9 +105,11 @@ function processCsInvoices() {
     if (savedInvoicesCount > 0) {
       thread.addLabel(processedLabel);
       Logger.log(`[ČS Invoices] Vlákno označeno štítkem ${CONFIG.CS_INVOICES.PROCESSED_LABEL} (uloženo ${savedInvoicesCount} faktur).`);
-    } else if (totalPdfCount > 0) {
+    } else if (totalPdfCount > 0 && ocrErrorsCount === 0) {
       thread.addLabel(ignoredLabel);
       Logger.log(`[ČS Invoices] Vlákno označeno štítkem ${CONFIG.CS_INVOICES.IGNORED_LABEL}.`);
+    } else if (ocrErrorsCount > 0) {
+      Logger.log(`[ČS Invoices] ⚠️ Vlákno ponecháno bez štítku kvůli chybě OCR (${ocrErrorsCount}×), zkusí se znovu v dalším běhu.`);
     }
   }
 }

@@ -91,12 +91,14 @@ function extractTextFromPdfOcr(pdfBlob, language) {
   try {
     const fileMetadata = {
       title: "temp_ocr_" + Date.now(),
-      mimeType: "application/vnd.google-apps.document"
+      mimeType: "application/pdf"
     };
+
+    const normalizedBlob = pdfBlob.copyBlob().setContentType("application/pdf");
 
     // Volání pokročilé služby Drive API (v2) s parametrem OCR
     // @ts-ignore
-    const tempDoc = Drive.Files.insert(fileMetadata, pdfBlob, {
+    const tempDoc = Drive.Files.insert(fileMetadata, normalizedBlob, {
       ocr: true,
       ocrLanguage: language || "cs"
     });
@@ -130,7 +132,7 @@ function extractTaxDateFromText(text) {
   // "Datum zdanitelného plnění: 30.09.2026"
   // "Datum zdan. plnění 30. 9. 2026"
   // "DUZP: 30.09.2026"
-  const regex = /(?:datum\s+(?:uskute[cč]n[eě]n[ií]\s+)?zdaniteln[eé]ho\s+pln[eě]n[ií]|datum\s+zdan\.?\s*pln[eě]n[ií]|duzp)[\s:]*([0-3]?\d)\s*[.\/-]\s*([0-1]?\d)\s*[.\/-]\s*(20\d{2})/i;
+  const regex = /(?:datum\s+(?:uskute[cč]n[eě]n[ií]\s+)?(?:zdaniteln[eé]ho|zdan\.?)\s*pln[eě]n[ií]|duzp)[\s:]*([0-3]?\d)\s*[.\/-]\s*([0-1]?\d)\s*[.\/-]\s*(20\d{2})/i;
   const match = text.match(regex);
 
   if (match) {

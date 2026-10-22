@@ -30,6 +30,7 @@ function processVatInvoices() {
     const messages = thread.getMessages();
     let matchedInvoicesCount = 0;
     let totalPdfAttachments = 0;
+    let ocrErrorsCount = 0;
 
     for (const message of messages) {
       const attachments = message.getAttachments();
@@ -62,6 +63,7 @@ function processVatInvoices() {
             Logger.log(`[VAT Invoices] ℹ️ DIČ v souboru ${originalName} nenalezeno.`);
           }
         } catch (err) {
+          ocrErrorsCount++;
           Logger.log(`[VAT Invoices] ⚠️ Chyba při OCR souboru ${originalName}: ${err.message}`);
         }
       }
@@ -72,10 +74,12 @@ function processVatInvoices() {
       thread.addLabel(processedLabel);
       thread.moveToArchive();
       Logger.log(`[VAT Invoices] Vlákno označeno ${CONFIG.VAT_INVOICES.PROCESSED_LABEL} a archivováno (${matchedInvoicesCount} shod).`);
-    } else if (totalPdfAttachments > 0) {
-      // Vlákno mělo PDF, ale v žádném nebylo nalezeno vaše DIČ
+    } else if (totalPdfAttachments > 0 && ocrErrorsCount === 0) {
+      // Vlákno mělo PDF, všechna proběhla OCR bez chyby, ale v žádném nebylo nalezeno vaše DIČ
       thread.addLabel(ignoredLabel);
       Logger.log(`[VAT Invoices] Vlákno označeno ${CONFIG.VAT_INVOICES.IGNORED_LABEL} (prevence re-processingu, zůstává v Inboxu).`);
+    } else if (ocrErrorsCount > 0) {
+      Logger.log(`[VAT Invoices] ⚠️ Vlákno ponecháno bez štítku kvůli chybě OCR (${ocrErrorsCount}×), zkusí se znovu v dalším běhu.`);
     }
   }
 }
